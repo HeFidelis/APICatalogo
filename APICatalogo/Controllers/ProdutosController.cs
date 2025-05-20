@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace APICatalogo.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ProdutosController : ControllerBase
     {
@@ -17,33 +17,20 @@ namespace APICatalogo.Controllers
             _context = context;
         }
 
+        // /api/produtos
         [HttpGet]
-        public ActionResult<IEnumerable<Produto>> Get()
+        public async Task<ActionResult<IEnumerable<Produto>>> GetAsync()
         {
-            try
-            {
-                var produtos = _context.Produtos.AsNoTracking().ToList();
-
-                if (produtos is null)
-                {
-                    return NotFound("Produtos não encontrados...");
-                }
-                return produtos;
-            }
-            catch (Exception)
-            {
-
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Ocorreu um problema ao tratar a sua solicitação.");
-            }
+            return await _context.Produtos.AsNoTracking().ToListAsync();
         }
 
-        [HttpGet("{id:int}", Name ="ObterProduto")]
-        public ActionResult<Produto> Get(int id)
+        // /api/produtos/id
+        [HttpGet("{id:int:min(1)}", Name ="ObterProduto")]
+        public async Task<ActionResult<Produto>> GetAsync(int id)
         {
             try
             {
-                var produto = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.ProdutoId == id);
+                var produto = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.ProdutoId == id);
 
                 if (produto is null)
                 {
@@ -59,6 +46,7 @@ namespace APICatalogo.Controllers
             }
         }
 
+        // /api/produtos
         [HttpPost]
         public ActionResult Post(Produto produto)
         {

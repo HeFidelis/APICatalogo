@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace APICatalogo.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CategoriasController : ControllerBase
     {
@@ -18,17 +18,17 @@ namespace APICatalogo.Controllers
         }
 
         [HttpGet("produtos")]
-        public ActionResult<IEnumerable<Categoria>> GetCategoriaProdutos()
+        public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoriaProdutosAsync()
         {
-            return _context.Categorias.AsNoTracking().Include(p => p.Produtos).ToList();
+            return await _context.Categorias.AsNoTracking().Include(p => p.Produtos).ToListAsync();
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Categoria>> Get()
+        public async Task<ActionResult<IEnumerable<Categoria>>> GetAsync()
         {
             try
             {
-                return _context.Categorias.AsNoTracking().ToList();
+                return await _context.Categorias.AsNoTracking().ToListAsync();
             }
             catch (Exception)
             {
@@ -37,12 +37,12 @@ namespace APICatalogo.Controllers
             }
         }
 
-        [HttpGet("{id:int}", Name = "ObterCategoria")]
-        public ActionResult<Categoria> Get(int id)
+        [HttpGet("{id:int:min(1)}", Name = "ObterCategoria")]
+        public async Task<ActionResult<Categoria>> GetAsync(int id)
         {
             try
             {
-                var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(p => p.CategoriaId == id);
+                var categoria = await _context.Categorias.AsNoTracking().FirstOrDefaultAsync(p => p.CategoriaId == id);
 
                 if (categoria is null)
                 {
