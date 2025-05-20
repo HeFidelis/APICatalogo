@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using APICatalogo.Validations;
 
 namespace APICatalogo.Models;
 
@@ -8,8 +9,9 @@ public class Produto
 {
     public int ProdutoId { get; set; }
 
-    [Required]
+    [Required(ErrorMessage ="O nome é obrigatório")]
     [StringLength(80)]
+    [PrimeiraLetraMaiuscula]
     public string? Nome { get; set; }
 
     [Required]
