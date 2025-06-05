@@ -13,6 +13,7 @@ using X.PagedList;
 
 namespace APICatalogo.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 [ApiController]
 public class CategoriasController : ControllerBase
@@ -28,7 +29,6 @@ public class CategoriasController : ControllerBase
         _mapper = mapper;
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CategoriaDTO>>> Get()
     {

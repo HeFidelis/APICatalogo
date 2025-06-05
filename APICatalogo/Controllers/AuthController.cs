@@ -125,7 +125,11 @@ namespace APICatalogo.Controllers
                 return BadRequest("Invalid access token/refresh token");
             }
 
-            string username = principal.Identity.Name;
+            string? username = principal.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(username))
+                return BadRequest("Username claim not found");
+
 
             var user = await _userManager.FindByNameAsync(username!);
 
@@ -146,7 +150,7 @@ namespace APICatalogo.Controllers
             return new ObjectResult(new
             {
                 accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
-                refreshToken = newRefreshToken,
+                refreshToken = newRefreshToken
             });
         }
 

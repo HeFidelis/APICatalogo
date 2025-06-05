@@ -13,6 +13,7 @@ using X.PagedList;
 
 namespace APICatalogo.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 [ApiController]
 public class ProdutosController : ControllerBase
@@ -78,7 +79,6 @@ public class ProdutosController : ControllerBase
         return Ok(produtosDto);
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ProdutoDTO>>> Get()
     {
