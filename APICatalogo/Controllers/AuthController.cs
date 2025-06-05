@@ -33,6 +33,7 @@ namespace APICatalogo.Controllers
             _logger = logger;
         }
 
+        [Authorize(Policy ="SuperAdminOnly")]
         [HttpPost]
         [Route("CreateRole")]
         public async Task<IActionResult> CreateRole(string roleName)
@@ -60,6 +61,7 @@ namespace APICatalogo.Controllers
                     new ResponseDTO { Status = "Error", Message = "Role already exist." });
         }
 
+        [Authorize(Policy = "SuperAdminOnly")]
         [HttpPost]
         [Route("AddUserToRole")]
         public async Task<IActionResult> AddUserToRole(string email, string roleName)
@@ -130,7 +132,7 @@ namespace APICatalogo.Controllers
                     Expiration = token.ValidTo
                 });
             }
-            return Unauthorized("Invalid username or password.");
+            return Unauthorized();
         }
 
         [HttpPost]
@@ -212,7 +214,7 @@ namespace APICatalogo.Controllers
             });
         }
 
-        [Authorize]
+        [Authorize(Policy ="ExclusiveOnly")]
         [HttpPost]
         [Route("revoke/{username}")]
         public async Task<IActionResult> Revoke(string username)

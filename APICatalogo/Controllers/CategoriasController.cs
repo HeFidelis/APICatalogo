@@ -133,6 +133,7 @@ public class CategoriasController : ControllerBase
         return Ok(categoriaAtualizada);
     }
 
+    [Authorize(Policy ="AdminOnly")]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<CategoriaDTO>> Delete(int id)
     {
