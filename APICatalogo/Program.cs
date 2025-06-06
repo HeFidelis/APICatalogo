@@ -32,7 +32,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("OrigensComAcessoPermitido",
     policy =>
     {
-        policy.WithOrigins("http://localhost:xxxx")
+        policy.WithOrigins("https://localhost:7022")
         .WithMethods("GET", "POST")
         .AllowAnyHeader();
     });
