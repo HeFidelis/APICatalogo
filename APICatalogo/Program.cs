@@ -27,6 +27,17 @@ builder.Services.AddControllers(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 }).AddNewtonsoftJson();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("OrigensComAcessoPermitido",
+    policy =>
+    {
+        policy.WithOrigins("http://localhost:xxxx")
+        .WithMethods("GET", "POST")
+        .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -135,6 +146,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+
+app.UseCors();
 
 app.UseAuthorization();
 
