@@ -15,7 +15,7 @@ using X.PagedList;
 
 namespace APICatalogo.Controllers;
 
-//[EnableRateLimiting("fixedwindow")]
+[EnableRateLimiting("fixedwindow")]
 [EnableCors("OrigensComAcessoPermitido")]
 [Route("[controller]")]
 [ApiController]
