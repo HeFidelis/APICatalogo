@@ -221,6 +221,8 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ProdutoDTO>> Delete(int id)
     {
         var produto = await _uof.ProdutoRepository.GetAsync(p=> p.ProdutoId == id);
