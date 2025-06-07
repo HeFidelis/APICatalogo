@@ -20,6 +20,7 @@ namespace APICatalogo.Controllers;
 [Route("[controller]")]
 [ApiController]
 //[ApiExplorerSettings(IgnoreApi = true)]
+[ApiConventionType(typeof(DefaultApiConventions))]
 public class ProdutosController : ControllerBase
 {
     private readonly IUnitOfWork _uof;

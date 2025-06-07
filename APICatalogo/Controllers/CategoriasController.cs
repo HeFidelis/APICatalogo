@@ -21,6 +21,7 @@ namespace APICatalogo.Controllers;
 [ApiController]
 [Produces("application/json")]
 //[ApiExplorerSettings(IgnoreApi = true)]
+[ApiConventionType(typeof(DefaultApiConventions))]
 public class CategoriasController : ControllerBase
 {
     private readonly IUnitOfWork _uof;
@@ -152,6 +153,7 @@ public class CategoriasController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    //[ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Put))]
     public async Task<ActionResult<CategoriaDTO>> Put(int id, CategoriaDTO categoriaDto)
     {
         if (id != categoriaDto.CategoriaId)
