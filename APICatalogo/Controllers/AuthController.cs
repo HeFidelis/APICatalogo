@@ -12,7 +12,7 @@ namespace APICatalogo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [ApiExplorerSettings(IgnoreApi = true)]
+    //[ApiExplorerSettings(IgnoreApi = true)]
     public class AuthController : ControllerBase
     {
         private readonly ITokenService _tokenService;
@@ -91,6 +91,12 @@ namespace APICatalogo.Controllers
             return BadRequest(new { error = "Unable to find user"});
         }
 
+        /// <summary>
+        /// Verifica as credencias de um usuário e retorna um token JWT se as credenciais forem válidas.
+        /// </summary>
+        /// <param name="model">Um objeto do tipo LoginModelDTO</param>
+        /// <returns>Status 200 e o token para o cliente</returns>
+        /// <remarks>Retorna o Status 200 e o token</remarks>
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModelDTO model)
@@ -136,6 +142,12 @@ namespace APICatalogo.Controllers
             return Unauthorized();
         }
 
+        /// <summary>
+        /// Registra um novo usuário no sistema.
+        /// </summary>
+        /// <param name="model">Um objeto do tipo RegisterModelDTO</param>
+        /// <returns>Status 200</returns>
+        /// <remarks>Retorna o Status 200</remarks>
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModelDTO model)

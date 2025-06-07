@@ -19,7 +19,7 @@ namespace APICatalogo.Controllers;
 [EnableCors("OrigensComAcessoPermitido")]
 [Route("[controller]")]
 [ApiController]
-[ApiExplorerSettings(IgnoreApi = true)]
+//[ApiExplorerSettings(IgnoreApi = true)]
 public class CategoriasController : ControllerBase
 {
     private readonly IUnitOfWork _uof;
@@ -33,6 +33,10 @@ public class CategoriasController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Obtém uma lista de objetos CategoriadDTO
+    /// </summary>
+    /// <returns>Uma lista de objetos CategoriaDTO</returns>
     //[Authorize]
     [DisableRateLimiting]
     [HttpGet]
@@ -85,6 +89,11 @@ public class CategoriasController : ControllerBase
         return Ok(categoriasDto);
     }
 
+    /// <summary>
+    /// Obtém uma Categoria pelo seu Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>Objetos CategoriaDTO</returns>
     [DisableCors]
     [HttpGet("{id:int}", Name = "ObterCategoria")]
     public async Task<ActionResult<CategoriaDTO>> Get(int id)
@@ -102,6 +111,22 @@ public class CategoriasController : ControllerBase
         return Ok(categoriaDto);
     }
 
+    /// <summary>
+    /// Inclui uma nova Categoria
+    /// </summary>
+    /// <remarks>
+    /// Exemplo de request:
+    /// 
+    ///     POST /categorias
+    ///     {
+    ///         "categoriaId": 1,
+    ///         "nome": "categoria1",
+    ///         "imagemUrl": "https://example.com/imagem1.jpg"
+    ///     }
+    /// </remarks>
+    /// <param name="categoriaDto">objeto CategoriaDTO</param>
+    /// <returns>O objeto CategoriaDTO incluída</returns>
+    /// <remarks>Retorna um objeto CategoriaDTO incluído</remarks>
     [HttpPost]
     public async Task<ActionResult<CategoriaDTO>> Post(CategoriaDTO categoriaDto)
     {
