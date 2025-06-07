@@ -25,7 +25,7 @@ public class PostProdutoUnitTests : IClassFixture<ProdutosUnitTestController>
     public async Task PostProdutoReturnCreatedStatusCode()
     {
         //Arrange
-        var novoProdutoDTO = new ProdutoDTO
+        var novoProdutoDto = new ProdutoDTO
         {
             Nome = "Novo Produto",
             Descricao = "Descrição do novo produto",
@@ -35,7 +35,7 @@ public class PostProdutoUnitTests : IClassFixture<ProdutosUnitTestController>
         };
 
         //Act
-        var data = await _controller.Post(novoProdutoDTO);
+        var data = await _controller.Post(novoProdutoDto);
 
         //Assert
         var createdResult = data.Result.Should().BeOfType<CreatedAtRouteResult>();

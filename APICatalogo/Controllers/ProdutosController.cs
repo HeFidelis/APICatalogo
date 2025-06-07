@@ -121,10 +121,10 @@ public class ProdutosController : ControllerBase
     /// </summary>
     /// <param name="id">Código do produto</param>
     /// <returns>Um objeto ProdutoDTO</returns>
+    [HttpGet("{id}", Name = "ObterProduto")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("{id}", Name = "ObterProduto")]
     public async Task<ActionResult<ProdutoDTO>> Get(int? id)
     {
         if (id == null || id <= 0)
@@ -200,6 +200,9 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesDefaultResponseType]
     public async Task<ActionResult<ProdutoDTO>> Put(int id, ProdutoDTO produtoDto)
     {
         if (id != produtoDto.ProdutoId)
