@@ -123,17 +123,29 @@ public class CategoriasController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<CategoriaDTO>> Get(int id)
     {
-        var categoria = await _uof.CategoriaRepository.GetAsync(c => c.CategoriaId == id);
+        var CacheCategoriaKey = $"CacheCategoria_{id}";
 
-        if (categoria is null)
+        if (!_cache.TryGetValue(CacheCategoriasKey, out Categoria? categoria))
         {
-            _logger.LogWarning($"Categoria com id = {id} não encontrada...");
-            return NotFound($"Categoria com id = {id} não encontrada...");
+            categoria = await _uof.CategoriaRepository.GetAsync(c => c.CategoriaId == id);
+
+            if (categoria is not null)
+            {
+                var cacheOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30),
+                    SlidingExpiration = TimeSpan.FromSeconds(15),
+                    Priority = CacheItemPriority.High
+                };
+                _cache.Set(CacheCategoriasKey, categoria, cacheOptions);
+            }
+            else
+            {
+                _logger.LogWarning($"Categoria com id = {id} não encontrada...");
+                return NotFound($"Categoria com id = {id} não encontrada...");
+            }
         }
-
-        var categoriaDto = _mapper.Map<CategoriaDTO>(categoria);
-
-        return Ok(categoriaDto);
+        return Ok(categoria);
     }
 
     /// <summary>

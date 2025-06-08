@@ -21,6 +21,7 @@ public class Repository<T> : IRepository<T> where T : class
 
     public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate)
     {
+        System.Threading.Thread.Sleep(3000); //Adiciona um delay de 3 segundos
         return await _context.Set<T>().FirstOrDefaultAsync(predicate);
     }
 
