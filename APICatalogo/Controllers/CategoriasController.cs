@@ -1,4 +1,4 @@
-﻿    using APICatalogo.Context;
+﻿using APICatalogo.Context;
 using APICatalogo.DTOs;
 using APICatalogo.Filters;
 using APICatalogo.Models;
@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using X.PagedList;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace APICatalogo.Controllers;
 
@@ -29,11 +30,15 @@ public class CategoriasController : ControllerBase
     private readonly ILogger<CategoriasController> _logger;
     private readonly IMapper _mapper;
 
-    public CategoriasController(ILogger<CategoriasController> logger, IUnitOfWork uof, IMapper mapper)
+    private readonly IMemoryCache _cache;
+    private const string CacheCategoriasKey = "CacheCategorias";
+
+    public CategoriasController(ILogger<CategoriasController> logger, IUnitOfWork uof, IMapper mapper, IMemoryCache cache)
     {
         _logger = logger;
         _uof = uof;
         _mapper = mapper;
+        _cache = cache;
     }
 
     /// <summary>
@@ -45,19 +50,31 @@ public class CategoriasController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [ProducesDefaultResponseType]
+    //[ProducesDefaultResponseType]
     public async Task<ActionResult<IEnumerable<CategoriaDTO>>> Get()
     {
-        var categorias = await _uof.CategoriaRepository.GetAllAsync();
-
-        if (categorias is null)
+        if (!_cache.TryGetValue(CacheCategoriasKey, out IEnumerable<Categoria>? categorias))
         {
-            return NotFound("Não existem categorias...");
+
+            categorias = await _uof.CategoriaRepository.GetAllAsync();
+
+            if (categorias is not null && categorias.Any())
+            {
+                var cacheOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30),
+                    SlidingExpiration = TimeSpan.FromSeconds(15),
+                    Priority = CacheItemPriority.High
+                };
+                _cache.Set(CacheCategoriasKey, categorias, cacheOptions);
+            }
+            else
+            {
+                _logger.LogWarning("Não existem categorias...");
+                return NotFound("Não existem categorias...");
+            }
         }
-
-        var categoriasDto = _mapper.Map<IEnumerable<CategoriaDTO>>(categorias);
-
-        return Ok(categoriasDto);
+        return Ok(categorias);
     }
 
     [HttpGet("pagination")]
